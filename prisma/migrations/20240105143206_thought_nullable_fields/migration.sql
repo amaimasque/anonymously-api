@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "thought" ALTER COLUMN "post" DROP NOT NULL,
+ALTER COLUMN "photo" DROP NOT NULL;

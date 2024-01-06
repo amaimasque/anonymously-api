@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id Int @id() @default(autoincrement())
+  username String @db.VarChar(25) @unique
+  password String @db.VarChar
+  dateOfBirth String @db.VarChar(10)
+  dateCreated DateTime @default(now()) @db.Timestamp(6)
+  dateUpdated DateTime @updatedAt
+  dateDelete DateTime? @db.Timestamp(6)
+  thoughts thought[]
+  insights insight[]
+  sentNotifications notification[] @relation("sentNotifications")
+  receivedNotifications notification[] @relation("receivedNotifications")
+  sentReactions reaction[] @relation("sentReactions")
+  accessToken String @db.VarChar @default(value: "")
+}
+
+model thought {
+  id Int @id() @default(autoincrement())
+  post String? @db.VarChar
+  video String? @db.VarChar
+  photo String? @db.VarChar
+  userId Int?
+  user user? @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  insights insight[]
+  dateCreated DateTime @default(now()) @db.Timestamp(6)
+  dateUpdated DateTime @updatedAt
+  dateDelete DateTime? @db.Timestamp(6)
+  reactions reaction[]
+}
+
+model insight {
+  id Int @id() @default(autoincrement())
+  message String @db.VarChar
+  userId Int?
+  user user? @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  thoughtId Int?
+  thought thought? @relation(fields: [thoughtId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  dateCreated DateTime @default(now()) @db.Timestamp(6)
+  dateUpdated DateTime @updatedAt
+  dateDelete DateTime? @db.Timestamp(6)
+}
+
+model reaction {
+  id Int @id() @default(autoincrement())
+  message String @db.VarChar
+  userId Int?
+  user user? @relation("sentReactions", fields: [userId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  thoughtId Int?
+  thought thought? @relation(fields: [thoughtId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  dateCreated DateTime @default(now()) @db.Timestamp(6)
+  dateUpdated DateTime @updatedAt
+  dateDelete DateTime? @db.Timestamp(6)
+}
+
+
+model notification {
+  id Int @id() @default(autoincrement())
+  title String @db.VarChar(100)
+  dateCreated DateTime @default(now()) @db.Timestamp(6)
+  dateUpdated DateTime @updatedAt
+  dateDelete DateTime? @db.Timestamp(6)
+  senderId Int?
+  sender user? @relation("sentNotifications", fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  receiverId Int?
+  receiver user? @relation("receivedNotifications", fields: [receiverId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
