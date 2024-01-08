@@ -1,6 +1,6 @@
 ## Description
 
-API for [anonymously-app](https://github.com/amaimasque/anonymously-app). Made with Node.js, Express.jx & PostreSQL.
+API for [anonymously-app](https://github.com/amaimasque/anonymously-app). Made with Node.js, Express.js & PostreSQL.
 
 
 API collection can be accessed [here](https://www.postman.com/mission-geoscientist-85089642/workspace/ami-s-public-apis/collection/31191383-f8a87af9-ee2d-45a8-8342-66421afd5187?action=share&creator=31191383).
